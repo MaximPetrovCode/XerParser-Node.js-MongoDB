@@ -44,23 +44,9 @@ app.post('/show', function(req, res){
 
 
 app.get('/', function (req, res) {
-    clearMongoDB(urlMongoDB,parseXer(urlMongoDB));
+    clearMongoDB(urlMongoDB,parseXer);
     res.render('main');
 });
-
-/*
-function printTable(urlMongoDB){
-    client.connect(urlMongoDB, function(err, db){
-        if (err) throw err;
-        db.collection("TASK").findOne({}, function(err, result){ //return first element of TASK
-            if (err) throw err;
-            db.close();
-            console.log(result);
-            return JSON.stringify(result);
-        });
-    });
-}
-*/
 
 app.listen(port, function () {
     console.log('app is listening on ' + port + ' port');
@@ -70,12 +56,13 @@ function clearMongoDB(urlMongoDB,callback) {
     client.connect(urlMongoDB, function (err, db) {
         if (err) return;
         db.dropDatabase(()=> console.log('DB is empty'));
+        callback(urlMongoDB);
     });
 
-    callback;
+    
 }
 
-function parseXer(urlMongoDB, callback) {
+function parseXer(urlMongoDB) {
     //get file direciry
     const filePath = __dirname + '/source/data.xer';
 
@@ -161,6 +148,4 @@ function parseXer(urlMongoDB, callback) {
             db.close();
         });
     });
-
-    callback;
 }
